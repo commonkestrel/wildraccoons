@@ -1,23 +1,29 @@
-mod conditional;
-use conditional::Conditional;
+mod refresh;
 
-use actix_web::{get, error, App, HttpRequest, HttpServer, Responder, HttpResponse, http::header::ContentType, middleware};
+use tera::Context;
+use tera::Tera;
+use tide::prelude::*;
+use tide::Request;
+use tide_tera::prelude::*;
 
 #[async_std::main]
-async fn main() -> std::io::Result<()> {
-    env_logger::init_from_env(env_logger::Env::default().default_filter_or("info"));
+async fn main() -> tide::Result<()> {
+    let mut tera = Tera::new("templates/**/*")?;
+    tera.autoescape_on(vec!["html"]);
 
-    let mut server = HttpServer::new(|| {
-        let nocache = middleware::DefaultHeaders::new()
-        .add(("Cache-Control", "no-cache, no-store, must-revalidate"))
-        .add(("Pragma", "no-cache"))
-        .add(("Expires", 0));
+    tera.render("index.tera", &Context::new()).unwrap();
 
-        App::new()
-            .wrap(Conditional::new(nocache, cfg!(debug_assertions)))
-            .wrap(middleware::Logger::default())
-    })
+    let mut app = tide::with_state(tera);
+    app.with(driftwood::DevLogger);
+    app.with(refresh::DebugRefresh);
 
-    server.bind(("localhost", 80))?
-    server.run().await;
+
+    app.at("/").get(|req: Request<Tera>| async move {
+        let tera = req.state();
+        tera.render_response("index.tera", &context! {})
+    });
+
+    app.listen("127.0.0.1:8080").await?;
+
+    Ok(())
 }

@@ -1,0 +1,3 @@
+{% extends "base.tera" %}
+
+{% block title %}Wild Raccoons{% endblock title %}
