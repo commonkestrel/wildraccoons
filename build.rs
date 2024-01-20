@@ -19,5 +19,6 @@ fn main() {
         panic!("failed to build typescript with `tsc`");
     }
 
-    println!("cargo:rerun-if-changed=ts")
+    println!("cargo:rerun-if-changed=ts");
+    println!("cargo:rerun-if-changed=js");
 }
