@@ -1,0 +1,16 @@
+@font-face {
+    font-family: "Fineomite";
+    src: url("static/fonts/Fineomite.ttf") format("ttf");
+
+}
+
+html, body {
+
+}
+
+#title {
+    font-family: "Fineomite";
+    font-size: 20vh;
+    font-weight: 100;
+    margin: 0;
+}
