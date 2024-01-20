@@ -6,6 +6,7 @@
     {{ super() }}
     <style type="text/css">
         .important { color: #336699; }
+        .image { position: absolute; }
     </style>
 {% endblock head %}
 {% block content %}
@@ -13,4 +14,7 @@
     <p class="important">
         Welcome to my awesome homepage.
     </p>
+
+    <img class="image" src="static/shift.svg">
+    <img class="image" src="static/8891-Logo-Transparent.svg">
 {% endblock content %}
